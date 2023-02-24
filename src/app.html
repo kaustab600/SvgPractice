@@ -1,0 +1,89 @@
+<svg version="1.1" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 300">
+
+	<defs>
+		<pattern id="smallGrid" width="10" height="10" patternunits="userSpaceOnUse">
+			<!-- the "userSpaceOnUse" means the pattern will follow the above width& height of 10units -->
+			<!-- the "objectBoundingBox" means the pattern will follow the above width& height
+			              wrt width & height of called svg element. here #calledRect element.
+			          -->
+		<rect width="100%" height="100%" style="fill:rgb(255,255,255);stroke-width:3;stroke:rgb(0,0,0)"/> </pattern>
+	</defs>
+
+	<rect width="100%" height="100%" x="0" y="0" fill="url(#smallGrid)" id="calledRect"/>
+
+	<line x1="0" y1="0" x2="10" y2="40" class="lineClass"></line>
+	<circle cx="50" cy="50" r="10" style="fill: none;stroke:rgb(0,0,0);stroke-width:1px"></circle>
+	<ellipse cx="50" cy="50" rx="30" ry="10" style="fill:none; stroke: rgb(0,0,0);stroke-width:1px"></ellipse>
+	<polyline
+	points="0,30 50,90 100,30 " style="fill:none;stroke: green;stroke-width:1px"/>
+	<!-- Diffrence betwenn polyline & polygon is polygon is self closing so use in shapes
+	            & polyline is used for graphs.
+	        -->
+	<polygon
+	points="0,0 20,0 30,10 20,20 0,20" style="fill:none;stroke: red;"/>
+	<!--<path d="M40,0 40,10 50,0 40,10 50,20 40,20" style="fill:none;stroke:blue;"/> -->
+	<path d="M60,0 60,10 70,0 M60,20 60,10 70,20" style="fill:none;stroke:blue;"/>
+	<path d="M40,0 V20 M40,0 H50 M40,10 H50 M40,20 H50" style="fill:none;stroke:red;"/>
+	<path d="M80,0 C82,25 98,25 100,0" style="fill:none;stroke:red;"/>
+	<path d="M122,0 C110,2 110,9 120,10 S121,26 112,20" style="fill:none;stroke:red;"/>
+	<path
+	d="M140,0 Q125,4 140,10 T130,20" style="fill:none;stroke:red;"/>
+	<!--
+	          Arc A <rx> <ry> rx-rotation large-arc sweep(opposite dir).
+	          here the rx & ry have relative values wrt to start & end poiints.
+	        -->
+	<path
+	d="M150,0 A10,20 0 0 0 170,0" fill="none" stroke="red"/>
+	<!-- <path d="M 10 315
+	           L 110 215
+	           A 30 50 0 0 1 162.55 162.45
+	           L 172.55 152.45
+	           A 30 50 -45 0 1 215.1 109.9
+	           L 315 10" stroke="black" fill="green" stroke-width="2" fill-opacity="0.5"/> -->
+	<text x="120" y="40" fill="none" stroke="red">Hello
+		<tspan dy="15" dx="-40">world</tspan>
+	</text>
+	<!--The <image> width is relative to x valuel here it is 50units from 180 -->
+	<image href="javelin-logo.png" x="180" y="30" width="50"/>
+
+	<rect class="strokeClasses opacity-50percent" x="120" y="60" width="50" height="50" fill="green" stroke="red"/>
+	<path
+	id="curved-path" d="M125,90 A20,10 0,0,1 165,90" fill="none" stroke="red"/>
+	<!-- Donot Provide x,y coordinates for curved textpaths.-->
+	<text x="145" y="92" fill="red" font-size="12" text-anchor="middle">World<textpath startoffset="50%" href="#curved-path">Hello</textpath>
+	</text>
+
+	<rect class="strokeClasses strokeDashArray" x="120" y="120" width="50" height="50" fill="url('#linearGrad')" stroke="red"/>
+
+	<rect class="strokeClasses strokeDashArray motion-animate" x="180" y="120" width="50" height="50" fill="url('#radialGrad')" stroke="red"/>
+
+	<defs>
+		<!-- spreadMethod is reflected on the shape, beyond the used shape cordinates like here x1="-10%" -->
+		<!-- pad: final color is used,
+		              reflect: alternative end colors is used,
+		              repeat: same order of color is used for extended part.
+		          -->
+			<linearGradient x1="-10%" y1="0%" x2="0%" y2="100%" id="linearGrad" gradientunits="objectBoundingBox" spreadmethod="reflect"> <stop stop-color="yellow" offset="0%"/>
+			<stop stop-color="green" offset="100%"/>
+		</linearGradient>
+
+		<linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+			<stop offset="0%" style="stop-color:rgb(255,0,0);stop-opacity:1"/>
+			<stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:1"/>
+		</linearGradient>
+		<!-- cx, cy defines the position of center of the radial grad. ( NOTE: not x,y)-->
+		<!-- fr is the start offset of first color -->
+		<!-- fx & fy are the start coordinates of radial painting from where
+		              the radial is drawn by arc manner till it reaches the edges.
+		              By default it is fx=50%, fy=50% bcuz the radial can be drawn fully without touching the edges before full radial.
+		              To view it, increase or decrease the fx value below.
+		              fx & fy are focus points.
+		          -->
+			<radialGradient cx="50%" cy="50%" id="radialGrad" r="20%" fr="10%" fx="40%" fy="50%" spreadmethod="repeat"> <stop offset="0%" stop-color="orange"/>
+			<stop offset="100%" stop-color="green"/>
+		</radialGradient>
+	</defs>
+
+
+</svg>
+@@include('./heartSvg.html')

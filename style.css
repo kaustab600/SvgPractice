@@ -1,0 +1,51 @@
+/* .container {
+  background-color: grey;
+} */
+.lineClass {
+  stroke: red;
+}
+
+.strokeClasses {
+  stroke-linejoin: round;
+  stroke-width: 1;
+}
+
+.strokeDashArray {
+  stroke-dasharray: 2 2;
+}
+
+.motion-animate {
+  animation: motion 10s linear 0s infinite forwards alternate-reverse;
+}
+
+.opacity-50percent {
+  opacity: 0.5;
+}
+@keyframes motion {
+  0% {
+    stroke-dasharray: 2 2;
+  }
+  25% {
+    stroke-dasharray: 2 0;
+  }
+  50% {
+    stroke-dasharray: 2 1;
+  }
+  100% {
+    stroke-dasharray: 2 2;
+  }
+}
+
+@keyframes openYourHeart {
+  from {
+    r: 0;
+  }
+
+  to {
+    r: 60px;
+  }
+}
+
+#myClip circle {
+  animation: openYourHeart 7s infinite;
+}

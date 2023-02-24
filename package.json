@@ -1,0 +1,26 @@
+{
+  "name": "svgtest",
+  "version": "1.0.0",
+  "description": "svg practice",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kaustab600/SvgPractice.git"
+  },
+  "keywords": [
+    "svg"
+  ],
+  "author": "kaustab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaustab600/SvgPractice/issues"
+  },
+  "homepage": "https://github.com/kaustab600/SvgPractice#readme",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-file-include": "^2.3.0"
+  }
+}
