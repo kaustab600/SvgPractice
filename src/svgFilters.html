@@ -1,0 +1,111 @@
+<svg width="100%" height="300px" viewport="0 0 200 200">
+<!-- NOTE: style tag can be used inside svg  -->
+  <style type="text/css">
+    .text-morphed {
+      font-size: clamp(24px,8vw,180px);
+      filter: url(#myFilter);
+      transform: rotate(-12deg);
+      transform-origin: 50% 50%;
+    }
+  </style>
+  <!--
+    in -> ( source ).
+    in2 -> ( Destination ).
+    in1 or in2 possible values -> SourceGraphic/SourceAlpha.
+    result - in caps format - like STROKE_10
+   ***************************************************************************
+  1.feMorphology - to thicken or thining.
+  2.feConvolveMatrix - create your own filter effects,
+    such as a blur or a sharpening filter, or to create an extrusion.
+    SINCE
+    feConvolveMatrix primitive will be applied equally to the left, top, right and bottom.
+    We can use targetX & targetY val but  0 <= targetX or Y < order (here-3). SO better to use feOffset filter.
+    &
+    Moreover we want it to extrude only to the right and bottom, we must offset the result.
+  3. feOffset - It offsets the entire element i.e (in="<element>") in dx & dy relative coordinates.
+  4. feFlood - It creates a rectangular box with fill color provided.
+  5. feTurbulance - It is similar to feFlood, i,r a rectangulat box with fill color,
+      but it can have different effects like weathered look, hazy.
+  6. feMerge - It merges feMergeNodes together, with every features from all of them. Bot like feComposite where
+              it is either atop, in, out, xor etc.
+  7. feColorMatrix -> It replaces the rgba pixel value wrt color matrix provided.
+        NOT LIKE feFlood where it provides a rectangular box.
+  8.feDisplacement - uses the pixel values from the image from in2 to spatially displace the image
+        from in. So, in-short takes from destination (in2) and apply it to source (in).
+  -->
+  <defs>
+    <filter id="myFilter">
+      <feFlood flood-color="green" flood-opacity="1" result="GREEN_COLOR"/>
+      <feComposite in="GREEN_COLOR" in2="SourceGraphic"
+        operator="in" result="GREEN_TEXT"/>
+
+      <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="STROKE_10"/>
+      <feConvolveMatrix order="3,3" kernelMatrix="1 0 0, 0 1 0, 0 0 1" in="STROKE_10" result="3D_TEXT" targetX="2" />
+       <!--<feConvolveMatrix order="3,3" kernelMatrix="8 1 1, 8 1 1, 8 1 1" in="STROKE_10" result="3D_TEXT"/>-->
+       <!-- We will offset the 3D_TEXT to 4,4 relative coordinates then compose with STROKE_10
+        which is present in the original points -->
+       <feOffset in="3D_TEXT" dx="5" dy="5" result="OFFSET_TEXT"/>
+       <!-- composing the OFFSET_TEXT with STROKE_10, so in original position the stroke image will be present
+            & the offset text will be on right bottom.
+            operators-: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feComposite
+            in -> part of source inside the destination.
+            out -> part of source outside the destination.
+            atop ->  "in" operator +  untouched parts of destination will stay.
+            xor -> NON-overlapping parts of source graphics on destination graphics.
+            lighter -> SUM of source & Ndestination graphics.
+      -->
+       <feComposite in="OFFSET_TEXT" in2="STROKE_10"
+        operator="out" result="3D_COMPOSED"/>
+       <feFlood flood-color="#582D1B" flood-opacity="1" result="RED_FLOOD"/>
+       <feComposite in="RED_FLOOD" in2="3D_COMPOSED"
+        operator="in" result="RED_TEXT"/>
+        <!--
+          TRIED POLY FILL for feMerge via feCompsite, but the issue is composite is relative to source & destination graphics.
+          SO, since the RED_TEXT is diluted & offseted, it will not work.
+          <feComposite in="SourceGraphic" in2="RED_TEXT"
+            operator="atop" result="MERGE_TEXT_POLYFILL"/>
+        -->
+        <feMerge result="MERGED_TEXT">
+          <feMergeNode in="GREEN_TEXT"/>
+          <feMergeNode in="RED_TEXT"/>
+        </feMerge>
+
+        <!--Like feFlood, feTurbulence outputs a filled rectangle but uses a noisy, unstructured texture.-->
+        <feTurbulence baseFrequency=".05,.004" width="200%" height="200%" top="-50%" type="fractalNoise" numOctaves="4" seed="0" result="FRACTAL-TEXTURE_10" />
+
+        <!-- Every  source image pixel's color value [R,G,B,A] is matrix multiplied by a 5 by 5 color matrix to create new color [R',G',B',A'].
+            https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feColorMatrix
+        -->
+
+        <!-- applying a contracty look by providing a greyish bg -->
+        <feColorMatrix type="matrix" values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 -1.2 1.1" in="FRACTAL-TEXTURE_10" result="FRACTAL-TEXTURE_20" />
+
+        <feComposite in="MERGED_TEXT" in2="FRACTAL-TEXTURE_20"
+          operator="in"/>
+    </filter>
+  </defs>
+  <text x="50%" y="50%" text-anchor="middle" class="text-morphed">Hello World</text>
+</svg>
+
+<svg width="600" height="600" viewBox="0 0 600 220"
+  xmlns="http://www.w3.org/2000/svg">
+  <text x="50%" y="0" text-anchor="middle">Displacement scale property comparison.</text>
+
+  <filter id="displacementFilter-with-scale-50">
+    <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2"
+      result="turbulence" />
+    <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="50"
+      xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+
+  <filter id="displacementFilter-with-scale-1">
+    <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2"
+      result="turbulence" />
+    <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="1"
+      xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+
+  <circle cx="100" cy="100" r="100" style="filter: url(#displacementFilter-with-scale-50)" />
+  <circle cx="400" cy="100" r="100" style="filter: url(#displacementFilter-with-scale-1)" />
+</svg>
+

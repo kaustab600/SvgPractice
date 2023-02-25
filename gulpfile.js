@@ -30,16 +30,21 @@ function defaultTask(cb) {
    * Piping is a mechanism where we provide the output of one stream as the input to another stream.
    */
   // dest() uses nodejs.WriteStream() and returns a ReadWriteStream Object.
-  srcRes.pipe(fileinclude({
-      prefix: '@@',
-      basepath: '@file'
-    })).pipe(dest("./"));
+  srcRes
+    .pipe(
+      fileinclude({
+        prefix: "@@",
+        basepath: "@file",
+      })
+    )
+    .pipe(dest("./"));
   /**
    * If nothing is returned from your task, you must use the error-first callback
    * to signal completion. The callback will be passed to your task as the
    * only argument - named cb()
    */
   cb();
+  // check also postcss intergration. https://github.com/postcss/postcss#gulp
 }
 
 /**
