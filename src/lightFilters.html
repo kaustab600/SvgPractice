@@ -1,0 +1,45 @@
+<svg width="100%" height="400" viewBox="0 0 500 200">
+    <!-- try NOT to use width="100%" height="100%" x="0" y="0" value son <filter>
+        Mostly keep it empty. But if required use all the above four properties.
+        default values used width=120%, height="120%", x= -10%, y=-10%.
+    -->
+    <filter id="diffusedLight">
+        <!-- This primitive filter Works on alpha channel, so at the end composition with sourceGraphic will be needed.-->
+        <feDiffuseLighting in="SourceGraphic" result="DIFFUSED_LIGHT_01" surfaceScale="6" specularConstant="1" specularExponent="30" lighting-color="#white">
+            <!-- x,y,z defines the x/y/z location for the LIGHT SOURCE in the coordinate system,
+                defined by the primitiveUnits attribute on the <filter> element.-
+                consider z value as greater the value further the source of light.
+            -->
+            <!-- try NOT to use width="100%" height="100%" x="0" y="0" value son <filter>
+                Mostly keep it empty. But if required use all the above four properties.
+                default values used width=100%, height="100%", x= 0%, y=0%.
+            -->
+            <!-- The pointsAtX attribute represents the x location in the coordinate system 
+                established by attribute primitiveUnits on the <filter> element 
+                of the point at which the light source is pointing.
+            -->
+            <!-- limitingConeAngle defines the spread of the light source. 
+                The greater then angle greater the spread (i.e <) ) -->
+
+            <!--The specularExponent attribute controls the focus for the light source.
+                The bigger the value the brighter the light.
+            -->
+            <fePointLight x="50" y="100" z="150" />
+        </feDiffuseLighting>    
+        <!-- composite is Required so apply those light effects on top of ypur sourceGraphic-->
+        <!--This value indicates that the source graphic defined in the in attribute 
+            and the destination graphic defined in the in2 attribute are combined using the following formula:
+            result = k1*i1*i2 + k2*i1 + k3*i2 + k4 , i1 & i2 are in & in2 pixel channel values.
+            NOTE: k2 -> (in) pixel value, k3 -> (in2) pixel value.
+        -->
+        <feComposite
+            in="SourceGraphic"
+            in2="DIFFUSED_LIGHT_01"
+            operator="arithmetic"
+            k1="0"
+            k2="1"
+            k3="1"
+            k4="0"/>
+    </filter>
+    <circle cx="50%" cy="50%" r="50" fill="red" filter="url(#diffusedLight)"/>
+</svg>
