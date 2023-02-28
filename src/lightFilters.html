@@ -5,7 +5,7 @@
     -->
     <filter id="diffusedLight">
         <!-- This primitive filter Works on alpha channel, so at the end composition with sourceGraphic will be needed.-->
-        <feDiffuseLighting in="SourceGraphic" result="DIFFUSED_LIGHT_01" surfaceScale="6" specularConstant="1" specularExponent="30" lighting-color="#white">
+        <feDiffuseLighting in="SourceGraphic" result="DIFFUSED_LIGHT_01" diffusedConstant="2" lighting-color="#FFF">
             <!-- x,y,z defines the x/y/z location for the LIGHT SOURCE in the coordinate system,
                 defined by the primitiveUnits attribute on the <filter> element.-
                 consider z value as greater the value further the source of light.
@@ -14,18 +14,30 @@
                 Mostly keep it empty. But if required use all the above four properties.
                 default values used width=100%, height="100%", x= 0%, y=0%.
             -->
-            <!-- The pointsAtX attribute represents the x location in the coordinate system 
-                established by attribute primitiveUnits on the <filter> element 
-                of the point at which the light source is pointing.
-            -->
-            <!-- limitingConeAngle defines the spread of the light source. 
-                The greater then angle greater the spread (i.e <) ) -->
 
-            <!--The specularExponent attribute controls the focus for the light source.
-                The bigger the value the brighter the light.
+            <!-- diffusedConstant attribute used to determine the final RGB value of a given pixel. 
+                The brighter the lighting-color, the smaller this number should be.
+                Needs a non-negative value.
             -->
-            <fePointLight x="50" y="100" z="150" />
-        </feDiffuseLighting>    
+            <!-- fePointLight creates a pointlight effect from source -->
+            <!-- <fePointLight x="50" y="100" z="150" /> -->
+            
+            <!-- The pointsAtX attribute represents the x location in the coordinate system 
+                from where the light source will come.
+            -->
+
+            <!-- feSpotlight creates a spotlight effect from source -->
+            <!-- <feSpotLight x="200" y="200" z="400" limitingConeAngle="5.5" specularExponent="2"/> -->
+
+            <!-- azimuth - Defines the clockwise direction angle in degrees for the 
+                light source on the XY plane.
+            -->
+            <!--elevation attribute specifies the direction angle for the light source 
+                from the XY plane towards the Z-axis, ( or towards u) in degrees.
+            -->
+            <feDistantLight azimuth="45" elevation="2"/>
+
+        </feDiffuseLighting> 
         <!-- composite is Required so apply those light effects on top of ypur sourceGraphic-->
         <!--This value indicates that the source graphic defined in the in attribute 
             and the destination graphic defined in the in2 attribute are combined using the following formula:
@@ -41,5 +53,29 @@
             k3="1"
             k4="0"/>
     </filter>
+
+    <!-- The surfaceScale attribute represents the height of the surface 
+        for a light filter primitive. More the value less the shine on surface. 
+        Default is 1
+    -->
+    <!--The specularExponent attribute controls the focus for the light source.
+        The bigger the value the brighter the light.
+    -->
+    <!-- specularConstant The bigger the value the stronger the reflection.
+    -->
+    <!-- limitingConeAngle defines the spread of the light source. 
+        The greater then angle greater the spread (i.e <) ) 
+    -->
+    <filter id="specularLight">
+        <feSpecularLighting in="SourceAlpha" surfaceScale="1" specularConstant="1" specularExponent="1" result="SPECULAR_LIGHT">
+            <feDistantLight azimuth="45" elevation="2"/>
+        </feSpecularLighting>
+        <feComposite in="SPECULAR_LIGHT" in2="SourceGraphic"
+            operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+    </filter>
+
+   <!---
     <circle cx="50%" cy="50%" r="50" fill="red" filter="url(#diffusedLight)"/>
+   -->
+    <circle cx="50%" cy="50%" r="50" fill="red" filter="url(#specularLight)"/>
 </svg>
